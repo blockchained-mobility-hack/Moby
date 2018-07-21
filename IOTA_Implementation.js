@@ -2,15 +2,16 @@
 const IOTA = require("iota.lib.js");
 const MAM = require('./mam.client.js');
 const Crypto = require('crypto-js');
+const fs = require('fs');
 
 //Create the connection
 let IOTA_Object = new IOTA({
-  'provider': 'http://172.27.64.23:14265'
+  'provider': 'https://nodes.testnet.iota.org:443'
 });
 exports.IOTA_Object = IOTA_Object;
 
 //Seeds
-exports.IssuerSeed = 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA';
+exports.IssuerSeed = 'OFHVJC99RYWA9HXQK99SZOHLFXEBBZWOQ9O9999PFQGMXWUCEYQWCCL99DJYYYZLJHTUJZLLFBTOAWBTA';
 exports.UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHXQJJZLNFXTZOHZTEQBHCWDPSXNXDNLBPMVXSPWCGETTJDLRWE9IHCFE';
 
 //Weird enum like object
@@ -35,18 +36,20 @@ exports.MAM_Publisher = class MAM_Publisher {
     }
     this.SetPrivacyLevel(a_PrivacyLevel);
     //Generate a fake msg in order to know the root, we can reuse that
-    let FakeMsg = MAM.create(this.MAM_Object, "");
     this.CurrentRoot = null;
-    this.OriginalRoot = FakeMsg.root;
+    this.OriginalRoot = null;
   }
 
   CatchupChannel(a_Index) {
-    for(let i=0; i < a_Index; i++) {
+    let Index = fs.readFileSync("Issuer.txt", "ascii");
+    console.log(Index);
+    for(let i=0; i < Index; i++) {
       let Result = MAM.create(this.MAM_Object, "");
       if(this.OriginalRoot == null) {
         this.OriginalRoot = Result.root;
       }
-      this.MAM_Object = MAM_Message.state;
+      this.NextRoot = Result.state.channel.next_root;
+      this.MAM_Object = Result.state;
       this.CurrentRoot = Result.root;
     }
   }
@@ -81,7 +84,7 @@ exports.MAM_Publisher = class MAM_Publisher {
     return this.OriginalRoot;
   }
   GetCurrentRoot() {
-    return this.OriginalRoot;
+    return this.CurrentRoot;
   }
   GetNextRoot() {
     if(this.MAM_Object.channel.next_root == null) {
@@ -95,35 +98,29 @@ exports.MAM_Publisher = class MAM_Publisher {
   }
 
   PublishMessage(a_Message) {
-    //console.log(this.MAM_Object);
     let MAM_Message = MAM.create(this.MAM_Object, IOTA_Object.utils.toTrytes(a_Message));
     this.MAM_Object = MAM_Message.state;
     if(this.OriginalRoot == null) {
       this.OriginalRoot = this.MAM_Object.root;
+      //Write Index to
+      fs.writeFile("Issuer.txt", "1", function(err) {
+        if(err) {
+            return console.log(err);
+        }
+      });
     }
+    let CurrentIndex = fs.readFileSync("Issuer.txt", "ascii");
+    fs.writeFile("Issuer.txt", parseInt(CurrentIndex)+1, function(err) {
+      if(err) {
+          return console.log(err);
+      }
+    });
     this.CurrentRoot = this.MAM_Object.root;
     if(this.MAM_Object.state) {
         this.NextRoot = this.MAM_Object.state.channel.next_root;
     }
     //console.log(this.MAM_Object);
     return MAM.attach(MAM_Message.payload, MAM_Message.address);
-  }
-
-  static FetchSingleTransaction() {
-
-  }
-
-  static FetchStreamRaw(a_Root, a_PrivacyLevel, a_Sidekey) {
-      return MAM.fetch(a_Root, a_PrivacyLevel, a_Sidekey);
-  }
-
-  static FetchStream() {
-
-  }
-
-  //Decode
-  static Decode(a_Transaction) {
-    return MAM.decode(a_Payload, a_Sidekey, a_Root);
   }
 }
 
@@ -142,6 +139,15 @@ exports.MAM_Reader = class MAM_Reader {
         console.log('A sidekey is needed for restricted mode, switching to private mode');
         this.PrivacyLevel = PRIVACYLEVEL.private;
       }
+  }
+  FetchStreamRaw() {
+    console.log(this.Root);
+      return MAM.fetch(this.Root, this.PrivacyLevel, this.Sidekey);
+  }
+
+  //Decode
+  static Decode(a_Transaction) {
+    return MAM.decode(a_Payload, a_Sidekey, a_Root);
   }
 }
 
