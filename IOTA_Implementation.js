@@ -1,6 +1,7 @@
 //Includes
 const IOTA = require("iota.lib.js");
-const MAM = require('mam.client.js');
+const MAM = require('./mam.client.js');
+const Crypto = require('crypto-js');
 
 //Create the connection
 let IOTA_Object = new IOTA({
@@ -135,15 +136,53 @@ class MAM_Reader {
       }
   }
 }
+//Seeds
+const IssuerSeed = 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA';
+const UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHXQJJZLNFXTZOHZTEQBHCWDPSXNXDNLBPMVXSPWCGETTJDLRWE9IHCFE';
+
+let IssuerMAM = new MAM_Publisher(IOTA_Object, 'IssuerSeed', 2, PRIVACYLEVEL.public);
+IssuerMAM.CatchupChannel(0);
+let SubjectMAM = new MAM_Publisher(IOTA_Object, 'UserSeed', 2, PRIVACYLEVEL.public);
+SubjectMAM.CatchupChannel(0);
+
 //USER - Proof
 
 //USER - AddClaim
 
 //Issuer - AddClaim
+function IssuerAddClaim(Claim) {
+  let JSONVersion = JSON.parse(Claim);
+  let Keys = Object.keys(JSONVersion[0]);
+  let Hashes = [];
+  for(let i in Keys) {
+    let DataPoint = Keys[i] + ":" + JSONVersion[0][Keys[i]];
+    Hashes.push(Crypto.SHA256(DataPoint).toString());
+  }
+  console.log(Hashes);
+  while(Hashes.length > 1) {
+    let OldHashes = Hashes;
+    Hashes = [];
+    for(let i=0; i < OldHashes.length; i+=2) {
+      Hashes.push(Crypto.SHA256(OldHashes[i]+OldHashes[i+1]).toString());
+    }
+      console.log(Hashes);
+  }
+
+  //let ClaimPromise = IssuerMAM.PublishMessage(Claim);
+
+  //ClaimPromise.then((Result) = > {
+  //  console.log(Result);
+  //}
+}
+let IssuerJSONClaim = '[{' +
+' "Name":"Jelle Femmo",' +
+' "Surname":"Millenaar", ' +
+' "Birthday": "13-11-1992", ' +
+' "StartDate":"03-06-2011", ' +
+' "ExpireDate":"03-06-2021" ' +
+'},' +
+'{ "SubjectAddress":"'+SubjectMAM.GetOriginalRoot()+'"}' +
+']';
+IssuerAddClaim(IssuerJSONClaim);
 
 //Issuer - RevokeClaim
-
-
-//Test
-let Masked = new MAM_Publisher(IOTA_Object, 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA', 1, PRIVACYLEVEL.public);
-Masked.CatchupChannel(2);
