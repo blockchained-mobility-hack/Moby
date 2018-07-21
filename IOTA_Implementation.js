@@ -4,9 +4,13 @@ const MAM = require('./mam.client.js');
 const Crypto = require('crypto-js');
 
 //Create the connection
-let IOTA_Object = new IOTA({
+exports.IOTA_Object = new IOTA({
   'provider': 'https://nodes.testnet.iota.org:443'
 });
+
+//Seeds
+exports.IssuerSeed = 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA';
+exports.UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHXQJJZLNFXTZOHZTEQBHCWDPSXNXDNLBPMVXSPWCGETTJDLRWE9IHCFE';
 
 //Weird enum like object
 const PRIVACYLEVEL = {
@@ -15,9 +19,10 @@ const PRIVACYLEVEL = {
   restricted: 'restricted'
 }
 Object.freeze(PRIVACYLEVEL);
+module.exports.PRIVACYLEVEL = PRIVACYLEVEL;
 
 //Wrapper class to make live easier
-class MAM_Publisher {
+exports.MAM_Publisher = class MAM_Publisher {
   constructor(a_IOTA_Object, a_Seed, a_Security, a_PrivacyLevel, a_Sidekey) {
     this.IOTA_Object = a_IOTA_Object;
     this.Seed = a_Seed;
@@ -119,7 +124,7 @@ class MAM_Publisher {
   }
 }
 
-class MAM_Reader {
+exports.MAM_Reader = class MAM_Reader {
   constructor(a_Root, a_PrivacyLevel, a_Sidekey) {
       this.Root = a_Root;
       this.Sidekey = a_Sidekey;
@@ -136,8 +141,9 @@ class MAM_Reader {
       }
   }
 }
+
 //Seeds
-const IssuerSeed = 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA';
+/*const IssuerSeed = 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA';
 const UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHXQJJZLNFXTZOHZTEQBHCWDPSXNXDNLBPMVXSPWCGETTJDLRWE9IHCFE';
 
 let IssuerMAM = new MAM_Publisher(IOTA_Object, 'IssuerSeed', 2, PRIVACYLEVEL.public);
@@ -184,5 +190,5 @@ let IssuerJSONClaim = '[{' +
 '{ "SubjectAddress":"'+SubjectMAM.GetOriginalRoot()+'"}' +
 ']';
 IssuerAddClaim(IssuerJSONClaim);
-
+*/
 //Issuer - RevokeClaim
