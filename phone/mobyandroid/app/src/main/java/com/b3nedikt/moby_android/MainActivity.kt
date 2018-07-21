@@ -1,22 +1,15 @@
 package com.b3nedikt.moby_android
 
-import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.evgenii.jsevaluator.JsEvaluator
+import com.evgenii.jsevaluator.interfaces.JsCallback
 import com.polidea.rxandroidble2.RxBleClient
-import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
-import com.polidea.rxandroidble2.scan.ScanSettings
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,9 +20,7 @@ class MainActivity : AppCompatActivity() {
         val UUID_TO_READ = UUID.randomUUID()
     }
 
-    val devices = arrayOf<String>()
-
-    private var device = RxBleClient.create(this)
+    private lateinit var client: RxBleClient
 
     private lateinit var scanSubscription: Disposable
     private lateinit var deviceConnectionSubsription: Disposable
@@ -40,9 +31,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bleDevicesRecyclerView.adapter = MyAdapter(devices)
+        //getPermissions()
+        //client = RxBleClient.create(this)
+        //scanForBleDevice()
 
-        // Here, thisActivity is the current activity
+        val file = assets.open("MerkleHashClaim.js")
+
+        val jsEvaluator = JsEvaluator(this)
+
+        val js = file.bufferedReader().use { it.readText() }
+
+        jsEvaluator.evaluate(js, object : JsCallback {
+            override fun onResult(result: String) {
+                // Process result here.
+                // This method is called in the UI thread.
+                Log.wtf(TAG, result)
+            }
+
+            override fun onError(errorMessage: String) {
+                // Process JavaScript error here.
+                // This method is called in the UI thread.
+            }
+        })
+
+    }
+
+    /*
+    private fun getPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -53,12 +68,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Permission has already been granted
         }
-
-        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        val REQUEST_ENABLE_BT = 1
-        this.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-
-        //scanForBleDevice()
     }
 
     private fun scanForBleDevice() {
@@ -135,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         scanSubscription.dispose()
     }
 
-    /*
+
         private fun writeToDevice(connection: Observable<RxBleConnection>, bytesToWrite: ByteArray) {
         connection.flatMapSingle({ rxBleConnection -> rxBleConnection.writeCharacteristic(UUID_TO_WRITE, bytesToWrite) })
                 .subscribe(
