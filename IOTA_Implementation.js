@@ -4,9 +4,10 @@ const MAM = require('./mam.client.js');
 const Crypto = require('crypto-js');
 
 //Create the connection
-exports.IOTA_Object = new IOTA({
-  'provider': 'https://nodes.testnet.iota.org:443'
+let IOTA_Object = new IOTA({
+  'provider': 'http://172.27.64.23:14265'
 });
+exports.IOTA_Object = IOTA_Object;
 
 //Seeds
 exports.IssuerSeed = 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA';
@@ -19,7 +20,7 @@ const PRIVACYLEVEL = {
   restricted: 'restricted'
 }
 Object.freeze(PRIVACYLEVEL);
-module.exports.PRIVACYLEVEL = PRIVACYLEVEL;
+exports.PRIVACYLEVEL = PRIVACYLEVEL;
 
 //Wrapper class to make live easier
 exports.MAM_Publisher = class MAM_Publisher {
@@ -101,7 +102,9 @@ exports.MAM_Publisher = class MAM_Publisher {
       this.OriginalRoot = this.MAM_Object.root;
     }
     this.CurrentRoot = this.MAM_Object.root;
-    this.NextRoot = this.MAM_Object.state.channel.next_root;
+    if(this.MAM_Object.state) {
+        this.NextRoot = this.MAM_Object.state.channel.next_root;
+    }
     //console.log(this.MAM_Object);
     return MAM.attach(MAM_Message.payload, MAM_Message.address);
   }
