@@ -11,8 +11,8 @@ let IOTA_Object = new IOTA({
 exports.IOTA_Object = IOTA_Object;
 
 //Seeds
-exports.IssuerSeed = 'OFHVJC9999WA9HXQK99SZOH99XEBBZWOQ9O9999PFQGMXWUCEYQWCCL99DJYYYZL99TUJZLLFBTOAWBTA';
-exports.UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHX99JZLNFXTZOHZTEQBHCWDPSXNXDNLBPM99SPWCGETTJDLRWE9IHCFE';
+exports.IssuerSeed = 'OFHVJC9999WA9HXQK99SZOH99XEBBZWOQ9O9999PFQGMXWUC99QWCCL99DJYYYZL99TUJZLLFBTOAWBTA';
+exports.UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHX99JZ99FXTZOHZTEQBHCWDPSXNXDNLBPM99SPWCGETTJDLRWE9IHCFE';
 
 //Weird enum like object
 const PRIVACYLEVEL = {
@@ -166,18 +166,21 @@ exports.GetClaimStatus = function(SubjectAddress, MAMTransactions) {
   let Status = [];
   for(let i in MAMTransactions.messages) {
     let Data = IOTA_Object.utils.fromTrytes(MAMTransactions.messages[i]);
+    console.log(Data);
     let SplitData = Data.split(";");
     Hashes.push(SplitData[0].split(":")[1]);
     Addresses.push(SplitData[1].split(":")[1]);
     Status.push(SplitData[2].split(":")[1]);
   }
   //Get the latest status of the claim
+
   let CurrentIndex = -1;
   for(let i in Addresses) {
     if(Addresses[i] == SubjectAddress) {
         CurrentIndex = i;
     }
   }
+
   return [Hashes[CurrentIndex], Status[CurrentIndex]];
 }
 

@@ -1,6 +1,9 @@
 //Includes
 const Crypto = require('crypto-js');
 
+//let Arg = process.argv;
+//MerkleHashClaim('[{"Name":"Jelle Femmo","Surname":"Millenaar","Birthday":"13-11-1992","StartDate":"03-06-2011","ExpireDate":"03-06-2021"}]');
+
 function MerkleHashClaim(data){
 
 //Get the JSON data
