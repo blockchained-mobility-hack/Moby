@@ -1,5 +1,13 @@
 # KYU on the tangle
 
+## Use Case
+
+A user doesn't want to go through the whole process of KYU.
+He just want to take a car and pays directly for it.
+The car sharing company on the other side needs to know exactly who drives with which car.
+This is needed for a lot of legal reasons. Insurance, Taxes, Fraud etc.
+We are using this Use-Case to proof that this is, in a bigger scale and a suitable latency possible.
+
 ## Functional description
 
 This repository contains an application which makes it possible to verify users and their data in
@@ -40,7 +48,7 @@ Both sides could earn money with this data-sets.
 - Android
 
 
-## How to run this application
+## Backend: How to run this application
 
 ### Install dependencies
 
@@ -52,3 +60,5 @@ npm i
 ```
 npm run start
 ```
+
+## Android App
