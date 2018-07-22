@@ -40,3 +40,5 @@ function ValidatyCheck(ClaimHash, ClaimAddress, UserAddress) {
   });
 
 }
+
+module.exports = ValidatyCheck;

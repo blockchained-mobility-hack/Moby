@@ -4,6 +4,8 @@ var kycAuthentificationMessage = require('./kycAuthentificationMessage');
 
 var MerkleHashClaim = require('./MerkleHashClaim');
 
+var ValidatyCheck = require('./ValidatyCheck');
+
 function KycCharacteristic(kycAuthentificationMessage) {
   console.log('KYC Characteristics');
   console.log(kycAuthentificationMessage);
@@ -28,9 +30,23 @@ KycCharacteristic.prototype.onWriteRequest = function(data, offset, withoutRespo
   var jsonString = data.toString();
   console.log(jsonString);
 
-    var result = MerkleHashClaim(jsonString);
+  var json = JSON.parse(jsonString);
+
+  var filteredJson = json[0];
+
+    var toCheck = MerkleHashClaim(filteredJson);
     console.log("Got Result by MerkleHashClaim");
-    console.log(result);
+    console.log(toCheck);
+
+    console.log("claim address");
+    console.log(json[2]);
+    var claimAddress = json[2];
+    console.log("user address");
+    var userAddress = json[1];
+    console.log(userAddress);
+
+
+    var validatyCheckPromise = ValidatyCheck(toCheck, claimAddress, userAddress);
 
     var self = this;
 
@@ -45,7 +61,18 @@ KycCharacteristic.prototype.onWriteRequest = function(data, offset, withoutRespo
         }
     });
 
-    this.kycAuthentificationMessage.processMessage(result);
+    validatyCheckPromise.then((validationToCheck) => {
+        console.log("Validation Check Result.");
+        console.log(validationToCheck);
+        this.kycAuthentificationMessage.processMessage(toCheck, validationToCheck);
+    });
+
+    validatyCheckPromise.catch((error) => {
+      console.log("Validity Error!");
+      console.log(error);
+    });
+
+
     callback(this.RESULT_SUCCESS);
 
   if (offset) {

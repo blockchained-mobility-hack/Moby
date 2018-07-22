@@ -8,8 +8,6 @@ function MerkleHashClaim(data){
 
 //Get the JSON data
     let JSONClaim = data;
-    //JSONClaim = decodeURIComponent(JSONClaim);
-    JSONClaim = JSON.parse(JSONClaim);
 
 //Retrieve the data
     let Depth = [];
