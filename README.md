@@ -36,9 +36,8 @@ Both sides could earn money with this data-sets.
 
 - IOTA + MAM
 - Bluetooth 4.0
-- Bleno (Bluetooth Library)
 - WebAssembly
--
+- Android
 
 
 ## How to run this application
