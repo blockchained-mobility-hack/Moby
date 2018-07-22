@@ -11,8 +11,8 @@ let IOTA_Object = new IOTA({
 exports.IOTA_Object = IOTA_Object;
 
 //Seeds
-exports.IssuerSeed = 'OFHVJC9999WA9HXQK99SZOHLFXEBBZWOQ9O9999PFQGMXWUCEYQWCCL99DJYYYZLJHTUJZLLFBTOAWBTA';
-exports.UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHXQJJZLNFXTZOHZTEQBHCWDPSXNXDNLBPMVXSPWCGETTJDLRWE9IHCFE';
+exports.IssuerSeed = 'OFHVJC9999WA9HXQK99SZOH99XEBBZWOQ9O9999PFQGMXWUCEYQWCCL99DJYYYZL99TUJZLLFBTOAWBTA';
+exports.UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHX99JZLNFXTZOHZTEQBHCWDPSXNXDNLBPM99SPWCGETTJDLRWE9IHCFE';
 
 //Weird enum like object
 const PRIVACYLEVEL = {
@@ -41,8 +41,10 @@ exports.MAM_Publisher = class MAM_Publisher {
   }
 
   CatchupChannel(a_Index) {
-    let Index = fs.readFileSync("Issuer.txt", "ascii");
-    console.log(Index);
+    let Index = 0;
+    if(fs.exists(this.Seed+".txt")) {
+      Index = fs.readFileSync(this.Seed+".txt", "ascii");
+    }
     for(let i=0; i < Index; i++) {
       let Result = MAM.create(this.MAM_Object, "");
       if(this.OriginalRoot == null) {
@@ -103,14 +105,18 @@ exports.MAM_Publisher = class MAM_Publisher {
     if(this.OriginalRoot == null) {
       this.OriginalRoot = this.MAM_Object.root;
       //Write Index to
-      fs.writeFile("Issuer.txt", "1", function(err) {
+      fs.writeFile(this.Seed+".txt", "1", function(err) {
         if(err) {
             return console.log(err);
         }
       });
     }
-    let CurrentIndex = fs.readFileSync("Issuer.txt", "ascii");
-    fs.writeFile("Issuer.txt", parseInt(CurrentIndex)+1, function(err) {
+    let CurrentIndex = parseInt(fs.readFileSync(this.Seed+".txt", "ascii"));
+    if(isNaN(CurrentIndex)) {
+      CurrentIndex = 0;
+    }
+    console.log(CurrentIndex);
+    fs.writeFile(this.Seed+".txt", parseInt(CurrentIndex)+1, function(err) {
       if(err) {
           return console.log(err);
       }
@@ -128,6 +134,9 @@ exports.MAM_Reader = class MAM_Reader {
   constructor(a_Root, a_PrivacyLevel, a_Sidekey) {
       this.Root = a_Root;
       this.Sidekey = a_Sidekey;
+      if(this.Sidekey == undefined) {
+        this.Sidekey = 0;
+      }
       if(PRIVACYLEVEL.hasOwnProperty(a_PrivacyLevel)) {
         this.PrivacyLevel = a_PrivacyLevel;
       } else {
