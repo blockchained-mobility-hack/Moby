@@ -3,15 +3,15 @@ const IOTA = require("iota.lib.js");
 const MAM = require('./mam.client.js');
 const Wrapper = require('./IOTA_Implementation.js');
 
-//let Arg = process.argv;
-//let ClaimHash = Arg[2];
-//let ClaimAddress = Arg[3];
-//let UserAddress = Arg[4];
-//let Data = ValidatyCheck(Arg[2], Arg[3], Arg[4]);
+let Arg = process.argv;
+let ClaimHash = Arg[2];
+let ClaimAddress = Arg[3];
+let UserAddress = Arg[4];
+let Data = ValidatyCheck(Arg[2], Arg[3], Arg[4]);
 
-//Data.then((Result) => {
-//  console.log(Result);
-//});
+Data.then((Result) => {
+  console.log(Result);
+});
 
 function ValidatyCheck(ClaimHash, ClaimAddress, UserAddress) {
   return new Promise(function(fulfill, reject)   {
