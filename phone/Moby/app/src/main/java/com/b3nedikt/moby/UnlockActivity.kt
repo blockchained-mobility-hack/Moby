@@ -3,7 +3,7 @@ package com.b3nedikt.moby
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
-import com.b3nedikt.moby.R.id.unlockImage
+import kotlinx.android.synthetic.main.activity_unlock.*
 import pl.droidsonroids.gif.GifDrawable
 
 class UnlockActivity : AppCompatActivity() {
@@ -12,8 +12,8 @@ class UnlockActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_unlock)
 
-        val unlockDrawable = GifDrawable(resources, R.drawable.splash_screen);
-        //unlockImage.setI
+        val unlockDrawable = GifDrawable(resources, R.drawable.unlock);
+        unlockImage.setImageDrawable(unlockDrawable)
 
         Handler().postDelayed({ unlockDrawable.stop() }, 1200)
     }
