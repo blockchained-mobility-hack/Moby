@@ -13,9 +13,10 @@ We are using this Use-Case to proof that this is, in a bigger scale and a suitab
 This repository contains an application which makes it possible to verify users and their data in
 a theoretical decentralized matter. Currently just limited by the low amount of IOTA transactions.
 
-It uses MAM to solves this. A government creates a stream an splits this stream for each verified user.
+It uses MAM to solves this. A government creates a stream and splits this stream for each ID/user.
 The user must own this address. Therefore he has the full control over his verification branch.
-But the government has the capability to revoke IDs if necessary.
+But the government has the capability to revoke IDs if necessary, by just pointing to the stream
+with a special revoke message.
 
 This repository just contains a Proof of Concept.
 Therefore, it is not designed to be used in a production environment.
