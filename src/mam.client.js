@@ -32577,7 +32577,7 @@ Multisig.initiateTransfer = function(input, remainderAddress, transfers, callbac
     // If message or tag is not supplied, provide it
     // Also remove the checksum of the address if it's there
     transfers.forEach(function(thisTransfer) {
-        thisTransfer.message = thisTransfer.message ? thisTransfer.message : '';
+        thisTransfer.processMessage = thisTransfer.message ? thisTransfer.message : '';
         thisTransfer.tag = thisTransfer.tag ? thisTransfer.tag : '';
         thisTransfer.obsoleteTag = thisTransfer.obsoleteTag ? thisTransfer.obsoleteTag : '';        
         thisTransfer.address = Utils.noChecksum(thisTransfer.address);

@@ -33,16 +33,19 @@ KycCharacteristic.prototype.onWriteRequest = function(data, offset, withoutRespo
     console.log(result);
 
     var self = this;
+
     this.kycAuthentificationMessage.once('ready', function(result) {
       console.log("on Message ready");
         if (self.updateValueCallback) {
-            console.log("data callback ready");
+            console.log("data callback ready called.");
+            console.log("Sending data back.");
             var data = new Buffer(1);
-            data.writeUInt8(result, 0);
+            data.writeUInt8(1, 0);
             self.updateValueCallback(data);
         }
     });
 
+    this.kycAuthentificationMessage.processMessage(result);
     callback(this.RESULT_SUCCESS);
 
   if (offset) {

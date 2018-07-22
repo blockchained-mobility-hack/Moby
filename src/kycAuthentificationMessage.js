@@ -8,14 +8,14 @@ function KycAuthentificationMessage() {
 
 util.inherits(KycAuthentificationMessage, events.EventEmitter);
 
-KycAuthentificationMessage.prototype.message = function(message) {
+KycAuthentificationMessage.prototype.processMessage = function(message) {
   console.log("New KYC Authentification Message");
   console.log(message);
 
   var self = this;
   setTimeout(function() {
     console.log("Send Ready");
-    self.emit('ready', result);
+    self.emit('ready', message);
   }, 200);
 };
 
