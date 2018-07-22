@@ -5,19 +5,22 @@ const Wrapper = require('./IOTA_Implementation.js');
 
 let Arg = process.argv;
 let ClaimAddress = Arg[2];
-let ClaimHash = Arg[3];
 
 let IssuerMAM = new Wrapper.MAM_Publisher(Wrapper.IOTA_Object, Wrapper.IssuerSeed, 2, Wrapper.PRIVACYLEVEL.public);
 IssuerMAM.CatchupChannel();
 let MamReader = new Wrapper.MAM_Reader(IssuerMAM.GetOriginalRoot(), Wrapper.PRIVACYLEVEL.public);
-let RawStream = MamReader.FetchStreamRaw();
-RawStream.then((Result) => {
-  let Derp = Wrapper.IOTA_Object.utils.fromTrytes(Result.messages[0]);
-  console.log(Derp);
+
+//Transaction data
+let PromTransactions = MamReader.FetchStream();
+
+PromTransactions.then((Result) => {
+  let ClaimStatus = Wrapper.GetClaimStatus(ClaimAddress, Result );
+  console.log(ClaimStatus);
+  if(ClaimStatus[0] && ClaimStatus[1] != "Revoked") {
+    console.log("Revoking");
+    let ClaimPromise = IssuerMAM.PublishMessage("ClaimHash:" + ClaimStatus[0] + "; Address:" + ClaimAddress + "; Status:Revoked");
+    ClaimPromise.then((Result) => {
+      console.log(Result);
+    });
+  }
 });
-
-
-/*let ClaimPromise = IssuerMAM.PublishMessage("ClaimHash : " + ClaimHash + "; Address : " + UserAddress);
-ClaimPromise.then((Result) => {
-  console.log(Result);
-});*/

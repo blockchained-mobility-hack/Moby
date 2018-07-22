@@ -11,7 +11,7 @@ let IOTA_Object = new IOTA({
 exports.IOTA_Object = IOTA_Object;
 
 //Seeds
-exports.IssuerSeed = 'OFHVJC99RYWA9HXQK99SZOHLFXEBBZWOQ9O9999PFQGMXWUCEYQWCCL99DJYYYZLJHTUJZLLFBTOAWBTA';
+exports.IssuerSeed = 'OFHVJC9999WA9HXQK99SZOHLFXEBBZWOQ9O9999PFQGMXWUCEYQWCCL99DJYYYZLJHTUJZLLFBTOAWBTA';
 exports.UserSeed = 'FFZDGIBYOJFNCKENQCSSZEFNGHXQJJZLNFXTZOHZTEQBHCWDPSXNXDNLBPMVXSPWCGETTJDLRWE9IHCFE';
 
 //Weird enum like object
@@ -140,9 +140,9 @@ exports.MAM_Reader = class MAM_Reader {
         this.PrivacyLevel = PRIVACYLEVEL.private;
       }
   }
-  FetchStreamRaw() {
-    console.log(this.Root);
-      return MAM.fetch(this.Root, this.PrivacyLevel, this.Sidekey);
+
+  FetchStream() {
+    return MAM.fetch(this.Root, this.PrivacyLevel, this.Sidekey);
   }
 
   //Decode
@@ -150,6 +150,28 @@ exports.MAM_Reader = class MAM_Reader {
     return MAM.decode(a_Payload, a_Sidekey, a_Root);
   }
 }
+
+exports.GetClaimStatus = function(SubjectAddress, MAMTransactions) {
+  let Hashes = [];
+  let Addresses = [];
+  let Status = [];
+  for(let i in MAMTransactions.messages) {
+    let Data = IOTA_Object.utils.fromTrytes(MAMTransactions.messages[i]);
+    let SplitData = Data.split(";");
+    Hashes.push(SplitData[0].split(":")[1]);
+    Addresses.push(SplitData[1].split(":")[1]);
+    Status.push(SplitData[2].split(":")[1]);
+  }
+  //Get the latest status of the claim
+  let CurrentIndex = -1;
+  for(let i in Addresses) {
+    if(Addresses[i] == SubjectAddress) {
+        CurrentIndex = i;
+    }
+  }
+  return [Hashes[CurrentIndex], Status[CurrentIndex]];
+}
+
 
 //Seeds
 /*const IssuerSeed = 'OFHVJCOMRYWA9HXQKMNSZOHLFXEMZZWOQ9O9SSPPFQGMXWUCEYUSCCLLXDJYYYZLJHTUJZLLFBTOAWBTA';
