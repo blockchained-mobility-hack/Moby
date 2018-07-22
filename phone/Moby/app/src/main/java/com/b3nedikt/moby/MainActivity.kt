@@ -1,6 +1,7 @@
 package com.b3nedikt.moby
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -11,6 +12,7 @@ import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
@@ -19,8 +21,10 @@ class MainActivity : AppCompatActivity() {
     companion object {
         val TAG = "MainActivity"
 
-        val UUID_TO_WRITE = UUID.randomUUID()
+        val UUID_TO_WRITE = UUID.fromString("13333333-3333-3333-3333-333333333337")
         val UUID_TO_READ = UUID.randomUUID()
+
+        val UUID_CHARACTERISTIC = UUID.fromString("13333333-3333-3333-3333-333333330002")
     }
 
     private lateinit var client: RxBleClient
@@ -38,25 +42,29 @@ class MainActivity : AppCompatActivity() {
         client = RxBleClient.create(this)
         //scanForBleDevice()
 
+        val name = nameEditTextView.text
+        val birthday = birthdayEditText.text
+        val expireDate = expireDateEditText.text
+        val driving = drivingCategoryEditText.text
+        val licenceNumber = licenceNumberEditText.text
+        val city = cityEditText.text
 
-        /*
+        val address = "L9FOQADXRFNAITMV9HMFYOPPSAVHQWPPEUURXTKORHYBVUFZMLJF9G9NRMUCFING9TRCX9GXWDHYZDURL"
+
         val json = """
-            [{ "Name":"Bob the Builder", "Depth": "3"},
-        { "Birthday":"13-11-1992", "Depth":"3"},
-        { "ExpireDate":"06-03-2021", "Depth":"3"},
-        { "Driving":"Car", "Depth":"3"},
-        { "License Number":"DE1001001", "Depth":"3"},
-        { "City":"Munich", "Depth":"3"}
-        ]
+            [{{ "Name":"$name", "Depth": "3"},
+        { "Birthday":"$birthday", "Depth":"3"},
+        { "ExpireDate":"$expireDate", "Depth":"3"},
+        { "Driving":"$driving", "Depth":"3"},
+        { "License Number":"$licenceNumber", "Depth":"3"},
+        { "City":"$city", "Depth":"3"}},
+        { "Address":$address}]
         """
-        */
-        val json = """
-            %5B%7B%22Name%22%3A%22Jelle%20Femmo%22%2C%22Surname%22%3A%22Millenaar%22%2C%22Birthday%22%3A%2213-11-1992%22%2C%22StartDate%22%3A%2203-06-2011%22%2C%22ExpireDate%22%3A%2203-06-2021%22%7D%5D
-            """
 
-        khttp.post(
-                url = "http://httpbin.org/post",
-                json = json)
+        button.setOnClickListener(
+                { startActivity(Intent(this, UnlockActivity::class.java)) })
+
+        connectToDevice()
     }
 
     private fun getPermissions() {
@@ -95,19 +103,54 @@ class MainActivity : AppCompatActivity() {
         val macAddress = "B8:27:EB:BC:E2:AB"
         val device = client.getBleDevice(macAddress)
 
-        deviceConnectionSubsription = device.establishConnection(false) // <-- autoConnect flag
+        deviceConnectionSubsription = device.establishConnection(true) // <-- autoConnect flag
                 .subscribe(
                         { rxBleConnection ->
                             // All GATT operations are done through the rxBleConnection.
 
+                            val name = nameEditTextView.text
+                            val birthday = birthdayEditText.text
+                            val expireDate = expireDateEditText.text
+                            val driving = drivingCategoryEditText.text
+                            val licenceNumber = licenceNumberEditText.text
+                            val city = cityEditText.text
+
+                            val address = "L9FOQADXRFNAITMV9HMFYOPPSAVHQWPPEUURXTKORHYBVUFZMLJF9G9NRMUCFING9TRCX9GXWDHYZDURL"
+
+                            val json = """
+            [{{ "Name":"$name", "Depth": "3"},
+        { "Birthday":"$birthday", "Depth":"3"},
+        { "ExpireDate":"$expireDate", "Depth":"3"},
+        { "Driving":"$driving", "Depth":"3"},
+        { "License Number":"$licenceNumber", "Depth":"3"},
+        { "City":"$city", "Depth":"3"}},
+        { "Address":$address}]"""
+
                             Log.wtf(TAG, "Connected")
-                            writeToDevice(device, byteArrayOf(12,12,15))
+                            writeToDevice(device, json.toByteArray(Charsets.UTF_8))
+
+                            rxBleConnection.discoverServices().subscribe({ services ->
+                                run {
+
+                                    val char = services.getCharacteristic(UUID_CHARACTERISTIC).blockingGet()
+
+                                    rxBleConnection.writeCharacteristic(char, json.toByteArray(Charsets.UTF_8))
+                                }
+                            })
                         },
                         { throwable ->
                             // Handle an error here.
                             throwable.printStackTrace()
                         }
                 )
+    }
+
+    private fun onConnectionFinished() {
+
+    }
+
+    private fun onConnectionFailure() {
+
     }
 
     private fun writeToDevice(bleDevice: RxBleDevice, bytesToWrite: ByteArray) {
@@ -117,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                 .subscribe(
                         { characteristicValue ->
                             // Characteristic value confirmed.
-
+                            Log.w(TAG, characteristicValue.toString())
 
                         },
                         { throwable ->
@@ -126,7 +169,7 @@ class MainActivity : AppCompatActivity() {
                 )
     }
 
-    private fun readFromBleDevice(bleDevice: RxBleDevice){
+    private fun readFromBleDevice(bleDevice: RxBleDevice) {
 
         bleDevice.establishConnection(false)
                 .flatMapSingle({ rxBleConnection -> rxBleConnection.readCharacteristic(UUID_TO_READ) })

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context=".MainActivity">
 
     <TextView
@@ -23,14 +24,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Bob the Builder"
-        app:layout_constraintTop_toBottomOf="@id/name"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/dateOfExpiryTextView"
+        android:id="@+id/birthdayTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Birthday"
@@ -41,35 +42,35 @@
         app:layout_constraintTop_toBottomOf="@id/nameEditTextView" />
 
     <EditText
-        android:id="@+id/dateOfExpiryEditText"
+        android:id="@+id/birthdayEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="13-11-1992"
-        app:layout_constraintTop_toBottomOf="@id/dateOfExpiryTextView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/birthdayTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/photoTextView"
+        android:id="@+id/expireDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ExpireDate"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateOfExpiryEditText" />
+        app:layout_constraintTop_toBottomOf="@id/birthdayEditText" />
 
     <EditText
-        android:id="@+id/photoEditText"
+        android:id="@+id/expireDateEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="06-03-2021"
-        app:layout_constraintTop_toBottomOf="@id/photoTextView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/expireDateTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -80,17 +81,17 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/photoEditText" />
+        app:layout_constraintTop_toBottomOf="@id/expireDateEditText" />
 
     <EditText
         android:id="@+id/drivingCategoryEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Car"
-        app:layout_constraintTop_toBottomOf="@id/drivingCategoryTextView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drivingCategoryTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -108,10 +109,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DE1001001"
-        app:layout_constraintTop_toBottomOf="@id/licenceNumberTextView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/licenceNumberTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -129,10 +130,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Munich"
-        app:layout_constraintTop_toBottomOf="@id/cityTextView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cityTextView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -140,10 +141,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Seed"
-        app:layout_constraintTop_toBottomOf="@id/cityEditText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cityEditText"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -151,10 +152,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AJSKDHAKSDHAPSIGDSDA99ASDASDKJASDH9"
-        app:layout_constraintTop_toBottomOf="@id/seedLabelTextView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seedLabelTextView"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Unlock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="80dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bob" />
 
 </android.support.constraint.ConstraintLayout>
