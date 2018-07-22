@@ -1,0 +1,10 @@
+## Install dependencies
+
+```
+npm i
+```
+
+## Run the appplication (needs to be on a node with bluetooth and all dependencies for bleno
+```
+npm run start
+```
