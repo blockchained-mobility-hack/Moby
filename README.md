@@ -1,12 +1,13 @@
-# KYU on the tangle
+# KYC on the tangle
 
 ## Use Case
 
-A user doesn't want to go through the whole process of KYU.
+A user doesn't want to go through the whole process of KYC.
 He just want to take a car and pays directly for it.
 The car sharing company on the other side needs to know exactly who drives with which car.
-This is needed for a lot of legal reasons. Insurance, Taxes, Fraud etc.
-We are using this Use-Case to proof that this is, in a bigger scale and a suitable latency possible.
+This is a legal requirement for many reasons. e.g. insurance, taxes, fraud prevention etc.
+We are using this Use-case to proof that is theoretical possible. Also in a bigger scale and with
+low latency.
 
 ## Functional description
 
@@ -27,7 +28,7 @@ Therefore it is definitely, in this state, not secure.
 
 We make sure with this concept that each user has the full control over his data.
 No clear text data are saved on the tangle. We only provide a root hash.
-The user provides the actual data and has control what data he provides during the KYU process.
+The user provides the actual data and has control what data he provides during the KYC process.
 Each data point, e.g. firstname and lastname, will hashed individually.
 It will then combined with another individual hashed value in a tree. Until it reaches the root hash.
 This root hash can then verified with the provided root hash by a government authority.
