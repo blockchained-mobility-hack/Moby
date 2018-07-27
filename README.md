@@ -1,5 +1,13 @@
 # KYC on the tangle
 
+## Team
+Benedickt Löbbeke
+Jelle Millenaar
+Philipp Alexander Blum
+Riswan Lathif
+
+
+
 ## Use Case
 
 A user doesn't want to go through the whole process of KYC.
