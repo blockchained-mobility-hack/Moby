@@ -1,10 +1,13 @@
 # KYC on the tangle
 
 ## Team
-Benedickt Löbbeke
-Jelle Millenaar
-Philipp Alexander Blum
-Riswan Lathif
+- Benedickt Löbbeke
+
+- Jelle Millenaar
+
+- Philipp Alexander Blum
+
+- Riswan Lathif
 
 
 
